@@ -11,7 +11,12 @@ This project implements an AI-based system to detect and predict marine heatwave
 
 👉 [View Full Leaderboard](./leaderboard.csv)
 ---
+## 🏆 Ocean Heatwave Challenge Leaderboard
 
+🚀 Track live model performance here:
+
+👉 **[View Live Leaderboard](https://praptikate.github.io/Ocean_Heatwave_Detection/)**
+---
 ## 🎯 Objective
 - Detect marine heatwave conditions from ocean data  
 - Understand environmental patterns affecting heatwaves  
