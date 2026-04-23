@@ -10,7 +10,7 @@ from sklearn.metrics import accuracy_score, f1_score
 username = os.getenv("GITHUB_ACTOR", "unknown")
 
 # Step 2: load dataset
-df = pd.read_csv("data.csv")
+df = pd.read_csv("Data/data.csv")
 
 # Step 3: preprocessing
 df = df.drop(columns=['Date', 'Latitude', 'Longitude'])
