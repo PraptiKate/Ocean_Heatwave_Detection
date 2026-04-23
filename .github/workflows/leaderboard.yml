@@ -36,6 +36,6 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "update leaderboard"
-            git pull origin ${{ github.head_ref }} --rebase
-            git push origin HEAD:${{ github.head_ref }}
+            git pull origin test-branch --rebase
+            it push origin test-branch
           fi
