@@ -32,10 +32,16 @@ jobs:
 
         echo "$name,$acc,$f1,#$pr" >> leaderboard.csv
 
-    - name: Commit changes
-      run: |
-        git config --global user.name "bot"
-        git config --global user.email "bot@github.com"
-        git add leaderboard.csv
-        git commit -m "update leaderboard" || echo "no change"
-        git push origin HEAD:${{ github.head_ref }}
+   - name: Commit changes
+  run: |
+    git config --global user.name "bot"
+    git config --global user.email "bot@github.com"
+    git add leaderboard.csv
+
+    if git diff --cached --quiet; then
+      echo "No changes to commit"
+    else
+      git commit -m "update leaderboard"
+      git pull origin ${{ github.head_ref }} --rebase
+      git push origin HEAD:${{ github.head_ref }}
+    fi
