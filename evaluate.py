@@ -18,7 +18,7 @@ files = glob.glob("submissions/*.py")
 if len(files) == 0:
     raise Exception("No submission file found")
 
-submission_file = files[0]
+submission_file = sorted(files)[-1]
 
 spec = importlib.util.spec_from_file_location("model", submission_file)
 model_module = importlib.util.module_from_spec(spec)
@@ -81,6 +81,13 @@ class DeltaRule:
 # Step 7 Train and Evaluate
 
 y_pred = model_module.predict(X_train, y_train, X_test)
+import numpy as np
+
+y_pred = np.array(y_pred)
+
+if len(y_pred) != len(y_test):
+    raise Exception("Prediction size mismatch")
+    
 accuracy = round(accuracy_score(y_test, y_pred), 3)
 f1 = round(f1_score(y_test, y_pred), 3)
 
