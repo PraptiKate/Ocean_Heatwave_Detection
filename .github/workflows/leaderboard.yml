@@ -34,7 +34,7 @@ jobs:
           git config --global user.email "bot@github.com"
 
           echo "Checking leaderboard.csv content:"
-          cat leaderboard.csv || echo "File not found
+          cat leaderboard.csv || echo "File not found"
 
           git add -A
 
