@@ -23,6 +23,7 @@ submission_file = sorted(files)[-1]
 spec = importlib.util.spec_from_file_location("model", submission_file)
 model_module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(model_module)
+print("Submission file loaded:", submission_file)
 
 if not hasattr(model_module, "predict"):
     raise Exception("File must contain predict() function")
@@ -81,6 +82,7 @@ class DeltaRule:
 # Step 7 Train and Evaluate
 
 y_pred = model_module.predict(X_train, y_train, X_test)
+print("Prediction done")
 import numpy as np
 
 y_pred = np.array(y_pred)
@@ -90,6 +92,8 @@ if len(y_pred) != len(y_test):
     
 accuracy = round(accuracy_score(y_test, y_pred), 3)
 f1 = round(f1_score(y_test, y_pred), 3)
+print("Accuracy:", accuracy)
+print("F1:", f1)
 
 # Step 8: save result
 result = {
@@ -106,6 +110,7 @@ import os
 
 file_exists = os.path.isfile("leaderboard.csv")
 
+print("Writing to leaderboard.csv")
 with open("leaderboard.csv", "a", newline="") as csvfile:
     writer = csv.writer(csvfile)
 
