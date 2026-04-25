@@ -34,14 +34,10 @@ jobs:
           git config --global user.email "bot@github.com"
 
           echo "Checking leaderboard.csv content:"
-          cat leaderboard.csv || echo "File not found"
+          cat leaderboard.csv
 
-          git add -A
+          git add leaderboard.csv
 
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "update leaderboard"
-            git pull origin test-branch --rebase
-            git push origin test-branch
-          fi
+          git commit -m "update leaderboard" || echo "No changes"
+          git pull origin test-branch --rebase || echo "Pull skipped"
+          git push origin test-branch
