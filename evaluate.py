@@ -121,7 +121,7 @@ print("F1:", f1)
 
 
 with open("result.json", "w") as f:
-    json.dump(result, f)
+    json.dump(results, f)
 # Step 9: update leaderboard.csv
 import csv
 import os
