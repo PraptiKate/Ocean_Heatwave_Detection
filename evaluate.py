@@ -19,15 +19,36 @@ files = glob.glob("submissions/*.py")
 if len(files) == 0:
     raise Exception("No submission file found")
 
-submission_file = sorted(files)[-1]
+results = []
 
-spec = importlib.util.spec_from_file_location("model", submission_file)
-model_module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(model_module)
-print("Submission file loaded:", submission_file)
+for submission_file in files:
+    try:
+        spec = importlib.util.spec_from_file_location("model", submission_file)
+        model_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(model_module)
 
-if not hasattr(model_module, "predict"):
-    raise Exception("File must contain predict() function")
+        if not hasattr(model_module, "predict"):
+            continue
+
+        y_pred = model_module.predict(X_train, y_train, X_test)
+        y_pred = np.array(y_pred)
+
+        if len(y_pred) != len(y_test):
+            continue
+
+        accuracy = round(accuracy_score(y_test, y_pred), 3)
+        f1 = round(f1_score(y_test, y_pred), 3)
+
+        name = os.path.basename(submission_file).replace(".py", "")
+
+        results.append({
+            "name": name,
+            "accuracy": accuracy,
+            "f1": f1
+        })
+
+    except Exception as e:
+        print(f"Error in {submission_file}: {e}")
 
 # Step 3: preprocessing
 df = df.drop(columns=['Date', 'Latitude', 'Longitude'])
@@ -97,11 +118,7 @@ print("Accuracy:", accuracy)
 print("F1:", f1)
 
 # Step 8: save result
-result = {
-    "name": username,
-    "accuracy": accuracy,
-    "f1": f1
-}
+
 
 with open("result.json", "w") as f:
     json.dump(result, f)
