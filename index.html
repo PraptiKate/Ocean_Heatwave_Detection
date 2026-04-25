@@ -6,10 +6,10 @@
   <style>
   body {
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #dbeafe, #e0f2fe, #ecfdf5);
     padding: 20px;
     text-align: center;
-    color: #333;
+    color: #1e293b;
   }
 
   h1 {
@@ -26,28 +26,35 @@
   }
 
   .card {
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
     border-radius: 20px;
     padding: 25px;
     width: 220px;
-    color: white;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    transition: transform 0.3s;
+    color: #1e293b;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.6);
+    transition: transform 0.3s, box-shadow 0.3s;
   }
 
   .card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
   }
 
   .gold {
-    border-top: 6px solid gold;
-    transform: scale(1.1);
+    border-top: 5px solid #facc15;
+    transform: scale(1.12);
   }
 
-  .silver { border-top: 6px solid silver; }
-  .bronze { border-top: 6px solid #cd7f32; }
+  .silver {
+    border-top: 5px solid #94a3b8;
+  }
 
+  .bronze {
+    border-top: 5px solid #b45309;
+  }
+    
   .card h3 {
     margin: 10px 0;
   }
@@ -86,7 +93,7 @@
 
 <body>
 
-<h1>🏆 Ocean Heatwave Challenge</h1>
+<h1> 🌊 Ocean Heatwave Detection </h1>
 
 <div class="top3" id="top3"></div>
 
