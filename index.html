@@ -2,16 +2,58 @@
 <html>
 <head>
   <title>Ocean Heatwave Leaderboard</title>
+
   <style>
-    body { font-family: Arial; padding: 20px; background:#f5f7fa;}
-    h1 { text-align:center; }
+    body {
+      font-family: Arial;
+      background: #f5f7fa;
+      padding: 20px;
+      text-align: center;
+    }
 
-    .cards { display:flex; gap:20px; margin-bottom:20px;}
-    .card { flex:1; background:white; padding:15px; border-radius:10px; text-align:center;}
+    h1 { margin-bottom: 30px; }
 
-    table { width:100%; border-collapse: collapse; background:white;}
-    th, td { padding:10px; text-align:center; }
-    th { background:#eee; }
+    /* TOP 3 CARDS */
+    .top3 {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      width: 200px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .gold { border-top: 5px solid gold; }
+    .silver { border-top: 5px solid silver; }
+    .bronze { border-top: 5px solid #cd7f32; }
+
+    .card h2 { margin: 10px 0; }
+
+    /* TABLE */
+    table {
+      width: 80%;
+      margin: auto;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #eee;
+    }
+
   </style>
 </head>
 
@@ -19,76 +61,80 @@
 
 <h1>🏆 Ocean Heatwave Challenge</h1>
 
-<div class="cards">
-  <div class="card" id="teams"></div>
-  <div class="card" id="best"></div>
-  <div class="card" id="avg"></div>
-</div>
+<div class="top3" id="top3"></div>
 
-<table id="table">
-<tr>
-  <th>Rank</th>
-  <th>Name</th>
-  <th>F1 Score</th>
-  <th>Accuracy</th>
-  <th>PR</th>
-</tr>
+<table>
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Name</th>
+      <th>F1 Score</th>
+      <th>Accuracy</th>
+    </tr>
+  </thead>
+  <tbody id="table"></tbody>
 </table>
 
 <script>
 fetch('leaderboard.csv')
-  .then(res => res.text())
-  .then(data => {
+.then(res => res.text())
+.then(data => {
 
-    let rows = data.trim().split('\n').slice(1).filter(r => r.trim() !== "");
+  let rows = data.trim().split('\n').slice(1).filter(r => r.trim() !== "");
 
-    let parsed = [];
+  let parsed = rows.map(r => {
+    let [name, acc, f1] = r.split(',');
 
-    rows.forEach(r => {
-      let cols = r.split(',');
-
-      if (cols.length < 3) return; // safety check
-
-      let name = cols[0];
-      let acc = parseFloat(cols[1]) || 0;
-      let f1 = parseFloat(cols[2]) || 0;
-      let pr = cols[3] || "0.00"; // optional
-
-      parsed.push({ name, acc, f1, pr });
-    });
-
-    if (parsed.length === 0) {
-      document.body.innerHTML += "<h2 style='text-align:center;'>No data found</h2>";
-      return;
-    }
-
-    parsed.sort((a,b) => b.f1 - a.f1);
-
-    document.getElementById("teams").innerHTML = "<h2>"+parsed.length+"</h2>Teams";
-    document.getElementById("best").innerHTML = "<h2>"+parsed[0].f1.toFixed(3)+"</h2>Best F1";
-
-    let avg = parsed.reduce((s,x)=>s+x.f1,0)/parsed.length;
-    document.getElementById("avg").innerHTML = "<h2>"+avg.toFixed(3)+"</h2>Avg F1";
-
-    let table = document.getElementById("table");
-
-    parsed.forEach((r,i)=>{
-      let tr = table.insertRow();
-
-      let rank = i==0?"🥇":i==1?"🥈":i==2?"🥉":i+1;
-
-      tr.insertCell(0).innerText = rank;
-      tr.insertCell(1).innerText = r.name;
-      tr.insertCell(2).innerText = r.f1.toFixed(3);
-      tr.insertCell(3).innerText = r.acc.toFixed(3);
-      tr.insertCell(4).innerText = r.pr;
-    });
-
-  })
-  .catch(err => {
-    document.body.innerHTML += "<h2 style='color:red;text-align:center;'>Error loading leaderboard</h2>";
-    console.error(err);
+    return {
+      name,
+      acc: parseFloat(acc),
+      f1: parseFloat(f1)
+    };
   });
+
+  if(parsed.length === 0) {
+    document.body.innerHTML += "<h2>No data found</h2>";
+    return;
+  }
+
+  // Sort by F1
+  parsed.sort((a,b) => b.f1 - a.f1);
+
+  // TOP 3 CARDS
+  const topDiv = document.getElementById("top3");
+
+  const medals = ["🥇","🥈","🥉"];
+  const classes = ["gold","silver","bronze"];
+
+  for(let i=0;i<3 && i<parsed.length;i++){
+    let p = parsed[i];
+
+    topDiv.innerHTML += `
+      <div class="card ${classes[i]}">
+        <h2>${medals[i]}</h2>
+        <h3>${p.name}</h3>
+        <p>F1: ${p.f1.toFixed(3)}</p>
+        <p>Acc: ${p.acc.toFixed(3)}</p>
+      </div>
+    `;
+  }
+
+  // TABLE
+  const table = document.getElementById("table");
+
+  parsed.forEach((p,i)=>{
+    let row = `
+      <tr>
+        <td>${i+1}</td>
+        <td>${p.name}</td>
+        <td>${p.f1.toFixed(3)}</td>
+        <td>${p.acc.toFixed(3)}</td>
+      </tr>
+    `;
+    table.innerHTML += row;
+  });
+
+});
 </script>
 
 </body>
