@@ -5,41 +5,13 @@
 
   <style>
   body {
-    background: linear-gradient(180deg, #0ea5e9 0%, #0369a1 40%, #022c43 100%);
-    color: #f1f5f9;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom, #38bdf8, #0ea5e9, #0369a1);
+    padding: 20px;
+    text-align: center;
+    color: white;
   }
-  <div class="wave"></div>
-
-  .wave {
-    position: fixed;
-    top: 0;
-    width: 200%;
-    height: 120px;
-    background: url("https://www.svgrepo.com/show/365880/wave.svg") repeat-x;
-    opacity: 0.2;
-    animation: waveMove 10s linear infinite;
-    z-index: -1;
-  }
-
-  @keyframes waveMove {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-    
-  <img src="https://i.imgur.com/8bKQ8uP.png" class="coral">
-  .coral {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    opacity: 0.2;
-    z-index: -1;
-  }
-
-  .wave, .coral {
-    z-index: -1;   /* always behind everything */
-    position: fixed;
-  }
-
+  
   h1 {
     color: white;
     margin-bottom: 40px;
@@ -95,25 +67,22 @@
     background: white;
     border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
   }
 
   th {
-    background: #667eea;
+    background: #6366f1;
     color: white;
     padding: 12px;
   }
 
   td {
     padding: 12px;
+    color: #1e293b;   /* 👈 IMPORTANT FIX */
+    font-weight: 500;
   }
 
   tr:nth-child(even) {
-    background: #f2f2f2;
-  }
-
-  tr:hover {
-    background: #e0e7ff;
+    background: #f1f5f9;
   }
 
 </style>
