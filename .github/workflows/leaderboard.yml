@@ -33,21 +33,15 @@ jobs:
 
       - name: Update CSV
         run: |
-            name=$(jq -r '.name' result.json)
-            acc=$(jq -r '.accuracy' result.json)
-            f1=$(jq -r '.f1' result.json)
+          echo "Name,Accuracy,F1" > leaderboard.csv
 
-            # Remove old entry of same user
-            tail -n +2 leaderboard.csv | grep -v "^$name," > temp.csv || true
+          jq -c '.[]' result.json | while read row; do
+            name=$(echo $row | jq -r '.name')
+            acc=$(echo $row | jq -r '.accuracy')
+            f1=$(echo $row | jq -r '.f1')
 
-            # Add updated row
-            echo "$name,$acc,$f1" >> temp.csv
-
-            # Write fresh CSV
-            echo "Name,Accuracy,F1" > leaderboard.csv
-            cat temp.csv >> leaderboard.csv
-
-            rm temp.csv
+            echo "$name,$acc,$f1" >> leaderboard.csv
+          done
 
 
       - name: Commit changes
