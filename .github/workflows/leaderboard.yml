@@ -1,32 +1,53 @@
 name: Update Leaderboard
+
+permissions:
+  contents: write
+
 on:
-  pull_request:
-    types: [closed]
-    branches: [main]
+  push:
+    branches: [ main ]
 
 jobs:
   update:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.10"
 
       - name: Install dependencies
-        run: pip install pandas
+        run: pip install pandas numpy scikit-learn
 
-      - name: Run Update Script
-        run: python update_leaderboard.py
+      - name: Run evaluation
+        run: python evaluate.py
 
-      - name: Commit and Push changes
+      # 🔍 DEBUG (optional but helpful)
+      - name: Show result.json
+        run: cat result.json
+
+      - name: Update CSV
         run: |
-          git config --global user.name "GitHub Action"
-          git config --global user.email "action@github.com"
+          echo "Name,Accuracy,F1" > leaderboard.csv
+
+          jq -c '.[]' result.json | while read row; do
+            name=$(echo $row | jq -r '.name')
+            acc=$(echo $row | jq -r '.accuracy')
+            f1=$(echo $row | jq -r '.f1')
+
+            echo "$name,$acc,$f1" >> leaderboard.csv
+          done
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "bot"
+          git config --global user.email "bot@github.com"
+
           git add leaderboard.csv
-          git commit -m "Update leaderboard with new PR results"
+          git commit -m "update leaderboard" || echo "No changes"
           git push
