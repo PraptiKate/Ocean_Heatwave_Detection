@@ -27,12 +27,12 @@ jobs:
       - name: Run evaluation
         run: python evaluate.py
 
-      # 🔍 DEBUG (optional but helpful)
+      #  DEBUG (optional but helpful)
       - name: Show result.json
         run: cat result.json
 
-        - name: Update CSV
-          run: |
+      - name: Update CSV
+        run: |
             name=$(jq -r '.name' result.json)
             acc=$(jq -r '.accuracy' result.json)
             f1=$(jq -r '.f1' result.json)
