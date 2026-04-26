@@ -66,8 +66,12 @@ for submission_file in files:
         accuracy = round(accuracy_score(y_test, y_pred), 3)
         f1 = round(f1_score(y_test, y_pred), 3)
 
-        name = os.getenv("GITHUB_ACTOR", 'unknown")
+        name = os.path.basename(submission_file).replace(".py", "")
+        user = os.getenv("GITHUB_ACTOR", "unknown")
 
+        name = f"{user}_{name}"
+
+       
         results.append({
             "name": name,
             "accuracy": accuracy,
