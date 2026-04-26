@@ -66,7 +66,7 @@ for submission_file in files:
         accuracy = round(accuracy_score(y_test, y_pred), 3)
         f1 = round(f1_score(y_test, y_pred), 3)
 
-        name = os.path.basename(submission_file).replace(".py", "")
+        name = os.getenv("GITHUB_ACTOR", 'unknown")
 
         results.append({
             "name": name,
