@@ -153,13 +153,18 @@ fetch('leaderboard.csv')
   let rows = data.trim().split('\n').slice(1).filter(r => r.trim() !== "");
 
   let parsed = rows.map(r => {
-    let [name, acc, f1] = r.split(',');
-    return {
-      name,
-      acc: parseFloat(acc),
-      f1: parseFloat(f1)
-    };
-  });
+    let parts = r.split(',');
+
+    if (parts.length < 3) return null;   // skip bad rows
+
+    let name = parts[0].trim();
+    let acc = parseFloat(parts[1]);
+    let f1 = parseFloat(parts[2]);
+
+    if (isNaN(acc) || isNaN(f1)) return null;  // skip invalid data
+
+    return { name, acc, f1 };
+  }).filter(x => x !== null);
 
   parsed.sort((a,b) => b.f1 - a.f1);
 
